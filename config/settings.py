@@ -1,3 +1,4 @@
+import os
 """
 Django settings for config project.
 
@@ -121,11 +122,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_DIR = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [
-    STATIC_DIR,
-]
-STATIC_ROOT = os.path.join(ROOT_DIR, '.static_root')
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
