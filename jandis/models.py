@@ -2,5 +2,10 @@ from django.db import models
 
 # Create your models here.
 
-class (models.Model):
-    test = models.CharField(max_length=100)
+from django.db import models 
+
+class Addresses(models.Model): 
+    name = models.CharField(max_length=10) 
+    phone_number = models.CharField(max_length=13) 
+    address = models.TextField() 
+
