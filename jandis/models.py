@@ -3,21 +3,27 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 class User(AbstractUser):
-    userEmail = models.EmailField(verbose_name = "email", max_length = 255, unique = True)
-    userName = models.CharField(max_length=30)
-    realTimePoint = models.IntegerField(default=0)
-    totalPoint = models.IntegerField(default=0)
-    commitDays = models.IntegerField(default=0)
-    attendance = models.IntegerField(default=0)
+    ATTENDANCE_CHOICES = {
+        ('1','attendance'), #오른쪽에 있는 것이 화면에 보인다.
+        ('0', 'absent'),
+    }
+
+    email = models.EmailField(verbose_name = "email", max_length = 255)
+    name = models.CharField(max_length=30)
+    realtimepoint = models.IntegerField(default=0)
+    totalpoint = models.IntegerField(default=0)
+    commitdays = models.IntegerField(default=0)
+    attendance = models.CharField(max_length=30, choices=ATTENDANCE_CHOICES, blank=True, null=True, verbose_name='is_attendance')
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
-    USERNAME_FIELD = 'userEmail' # 유저 모델의 Unique Identifier. unique = True 가 옵션으로 설정된 필드 값으로 설정
-    REQUIRED_FIELDS = [] # 필수로 받고 싶은 필드 값. USERNAME_FIELD 값과 패스워드는 항상 기본적으로 요구하기 때문에 따로 명시하지 않음.
-
+    
+    class Meta: 
+        ordering = ['created_on']
+        
 
     def __str__(self):
-        return self.userEmail
+        return self.email
 
     # def get_absolute_url(self):
     #     return reverse("myswsite:devtool_read", kwargs={"pk": self.pk})

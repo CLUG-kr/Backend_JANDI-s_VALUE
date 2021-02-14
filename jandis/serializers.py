@@ -1,8 +1,9 @@
-
+from .models import *
 from rest_framework import serializers 
 
 
-# class AddressesSerializer(serializers.ModelSerializer): 
-#     class Meta: 
-#         model = Addresses 
-#         fields = ['name', 'phone_number', 'address']
+class UserSerializer(serializers.ModelSerializer): 
+    class Meta: 
+        model = User
+        fields = ['email', 'name', 'realtimepoint', 'totalpoint', 'commitdays', 'attendance','created_on', 'updated_on' ]
+
