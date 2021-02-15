@@ -23,5 +23,5 @@ def github_login_test(request):
 
     url = 'https://github.com/login/oauth/access_token'
     response = requests.post(url, data = body, headers = headers)   
-    # print(response.json()) # print('타타타타타입', response)
+
     return Response(response.json())
