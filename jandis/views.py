@@ -5,6 +5,21 @@ from rest_framework.parsers import JSONParser
 from .models import *
 from .serializers import *
 
+from django.core import serializers
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+#데코레이터 제공
+from rest_framework.permissions import IsAuthenticated #로그인 여부 확인
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication #jwt인증 확인
+
+
+@api_view(['GET']) #get 요청인지 먼저 검증한다.
+@permission_classes((IsAuthenticated, )) #권한 체크 = 로그인을 했는지 여부 
+@authentication_classes((JSONWebTokenAuthentication,)) #토큰 확인 = 이상있으면 에러를 json형식으로 반환 
+def jwt(request):
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True) 
+    return JsonResponse(serializer.data, safe=False) 
+
 
 @csrf_exempt 
 def user_list(request): 

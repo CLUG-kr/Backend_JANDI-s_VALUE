@@ -1,4 +1,5 @@
 import os
+import datetime
 """
 Django settings for config project.
 
@@ -129,10 +130,21 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 AUTH_USER_MODEL = 'jandis.User'
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ],
-    "DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication",),
+   'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ), # 로그인 여부를 확인하는 클래스
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ), # 로그인과 관련된 클래스를 JWT를 사용하도록 함 
+}
+
+
+JWT_AUTH = {
+    'JWT_SECRET_KEY': SECRET_KEY,
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7), #토큰의 유효기간
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28), # 토큰 갱신의 유효기간
 }
