@@ -1,4 +1,5 @@
 import os
+import datetime
 """
 Django settings for config project.
 
@@ -28,7 +29,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['3.34.194.121:8000','localhost','127.0.0.1', '3.34.194.121']
 
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000'] #아까 설치한 corsheaders로 해당 서버와 연결할 서버의 url을 작성해준모습
 
+# Application definition
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,14 +41,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'knox',
+    'user', 
+    'rest_framework', 
+    'rest_framework_jwt',
+    'corsheaders', 
     'jandis',
 ]
 
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',     # 추가
+    'django.middleware.common.CommonMiddleware', # 추가
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,7 +62,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = 'api.urls'
 
 TEMPLATES = [
     {
@@ -73,7 +80,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = 'api.wsgi.application'
 
 
 # Database
@@ -126,13 +133,30 @@ USE_TZ = False
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
-AUTH_USER_MODEL = 'jandis.User'
+# AUTH_USER_MODEL = 'jandis.User'
 
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
+REST_FRAMEWORK = { # 추가
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.IsAuthenticated',  #인증된 회원만 액세스 허용
+        'rest_framework.permissions.AllowAny',         #모든 회원 액세스 허용
     ],
-    "DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication",),
+    'DEFAULT_AUTHENTICATION_CLASSES': ( #api가 실행됬을 때 인증할 클래스를 정의해주는데 우리는 JWT를 쓰기로 했으니
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication', #이와 같이 추가해준 모습이다.
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
 }
+
+JWT_AUTH = { # 추가
+   'JWT_SECRET_KEY': SECRET_KEY,
+   'JWT_ALGORITHM': 'HS256',
+   'JWT_VERIFY_EXPIRATION' : True, #토큰검증
+   'JWT_ALLOW_REFRESH': True, #유효기간이 지나면 새로운 토큰반환의 refresh
+   'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=30),  # Access Token의 만료 시간
+   'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=3), # Refresh Token의 만료 시간
+   'JWT_RESPONSE_PAYLOAD_HANDLER': 'api.custom_responses.my_jwt_response_handler'
+}
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
