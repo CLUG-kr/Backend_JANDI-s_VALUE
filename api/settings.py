@@ -41,12 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user', 
     'oauth',
     'rest_framework', 
-    
+    'dashboard',
     'corsheaders', 
-    'jandis',
 ]
 
 
