@@ -29,4 +29,26 @@ class GithubUserView(APIView) :
         print(data, type(json_data))
         
         return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림
-        
+
+    
+# @api_view(['GET'])
+# def events(request):
+#     body = request.data
+#     headers = {
+#         'Accept': 'application/json'
+#     }
+
+#     url = 'https://github.com/users/{username}/events'
+#     response = requests.post(url, data = body, headers = headers)   
+
+#     return Response(response.json())   
+
+# @api_view(['GET'])
+# def dash_commits(request):
+#     git = Github("token")
+#     org = git.get_organization('organization')
+
+#     for repo in org.get_repos():
+#         repository_commit_date = repo.get_commit(sha='master')
+#         stats_ = repository_commit_date.stats
+#         print(stats_.total)
