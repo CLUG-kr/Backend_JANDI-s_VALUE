@@ -25,3 +25,23 @@ def github_login_test(request):
     response = requests.post(url, data = body, headers = headers)   
 
     return Response(response.json())
+
+
+class GithubUserView(APIView) :
+    def get(self, request):
+        username = request.GET['username'] # username 받을거임
+        url = 'https://api.github.com/users/%s' % username
+        urlresponse = requests.get(url)
+        # print(urlresponse.json())
+        # JSON 잘 넘김
+        ctx = urlresponse.json()
+        data = {
+            'username' : ctx['login'],
+            'profile_img_url' : ctx['avatar_url']
+        }
+        json_data = json.dumps(data)
+        print(data, type(json_data))
+        
+        return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림
+        # response = requests.post(url,data = data, headers = headers)
+        
