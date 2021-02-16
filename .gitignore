@@ -151,7 +151,7 @@ dmypy.json
 .prof
 
 # End of https://www.toptal.com/developers/gitignore/api/django
-
+# Only for Developers -> 배포할 땐 없애야 하는 듯
  **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
