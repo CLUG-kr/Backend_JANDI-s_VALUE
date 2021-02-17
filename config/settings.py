@@ -39,10 +39,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'knox',
+
+    'django.contrib.sites',
     'jandis',
+
+    #django-rest-auth    
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+
+    #django-allauth
+    #allauth 라이브러리로 html에 구현하는 것이 아니라 프론트와 협업하기 위해 따로 만들어야함.
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+    
 ]
+
+SITE_ID=1
 
 
 
@@ -139,6 +154,13 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ), # 로그인과 관련된 클래스를 JWT를 사용하도록 함 
 }
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+#기존 username이 있던 User를 커스터마이징했기 때문에, username을 필요하지 않게 하도록 설정
+#써야한다면 코드 없애기 
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 
 JWT_AUTH = {
