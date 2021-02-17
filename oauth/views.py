@@ -15,16 +15,19 @@ import json
 
 
 @api_view(['POST'])
-def github_login_test(request):
+def token(request):
     body = request.data
     headers = {
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        
     }
 
     url = 'https://github.com/login/oauth/access_token'
     response = requests.post(url, data = body, headers = headers)   
-
+    
     return Response(response.json())
+
+
 
 
 
