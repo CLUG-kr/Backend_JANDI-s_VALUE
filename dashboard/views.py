@@ -26,7 +26,7 @@ class GithubUserView(APIView) :
             'profile_img_url' : ctx['avatar_url']
         }
         json_data = json.dumps(data)
-        print(data, type(json_data))
+        # print(data, type(json_data))
         
         return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림
 
