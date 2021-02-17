@@ -26,11 +26,37 @@ class GithubUserView(APIView) :
             'profile_img_url' : ctx['avatar_url']
         }
         json_data = json.dumps(data)
-        print(data, type(json_data))
         
         return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림
 
-    
+    def post(self, request):
+        username = request.GET['username'] # username 받을거임
+        url = 'https://api.github.com/users/%s/repos' % username
+        urlresponse = requests.get(url)
+        # print(urlresponse.json()) # JSON 잘 넘김
+        ctx = urlresponse.json()
+        repositories = []
+        for x in ctx : 
+            repositories.append(x['name'])
+        data = {
+            'repositories' : repositories
+        } 
+        
+        # for y in data.get('repositories') :
+        #     url2 = 'https://api.github.com/repos/%s/%s/stats/punch_card' % (username, y)
+        #     url2response = requests.get(url)
+        #     ctx2 = url2response.json()
+        #     bam = 0
+            
+
+
+        # daydata = {
+        #     '0': bam
+        # }
+        json_data = json.dumps(data)
+        return JsonResponse(data, safe=False)
+
+
 # @api_view(['GET'])
 # def events(request):
 #     body = request.data
