@@ -88,19 +88,8 @@ class GithubLanguageView(APIView) :
             # 2. 해당 list에 ctx키값이 없으면 생성 후 값 담기 
             # 3. 있으면 있는 곳에 값 담기
             # 4. 완성한 list를 json형식으로 response 보내기 
-            
-        
 
         return HttpResponse("hello world~~")
-        
-        # # print(urlresponse.json())
-        # # JSON 잘 넘김
-        # ctx = urlresponse.json()
-        # data = {
-        #     'username' : ctx['login'],
-        #     'profile_img_url' : ctx['avatar_url']
-        # }
-        # json_data = json.dumps(data)
 
         
         # repositories = data.get('repositories')
