@@ -12,61 +12,75 @@ import requests
 import json
 
 # Create your views here.
+headers = {
+            'Accept': 'application/json',
+            'Authorization' : 'token 949d07f51185f05a3b04a6a9eb66772b9a0cbe62',
+           
+        }
+
+query = {
+     'visibility' : 'all',
+     'per_page':  100, 
+}
 
 class GithubUserView(APIView) :
     def get(self, request):
-        username = request.GET['username'] # username 받을거임
-        url = 'https://api.github.com/users/%s' % username
-        urlresponse = requests.get(url)
-        print("그냥 response", urlresponse)
-        print("json()형식으로!!", urlresponse.json()) # json() -> response를 json타입으로 인코딩되어 반환
+        r = requests.get('https://api.github.com/user', headers=headers)
         # JSON 잘 넘김
-        ctx = urlresponse.json()
-        # print(type(ctx)) # 딕셔너리타입임
+        ctx = r.json()
+        print(ctx)
         data = {
             'username' : ctx['login'],
             'profile_img_url' : ctx['avatar_url']
         }
         json_data = json.dumps(data) #dictionary를 json으로 변환
         # print(type(json_data)) # json.dumps를 쓰면 str타입(이게json타입이군..)으로 바뀌군..
-        # json을 dictionary로 변환하고 싶다면 json.loads(json_val)
-        return Response(data)  #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림 
-        # response는 렌더링되지 않은 컨텐츠를 가져와 올바른 타입으로 변환해준다.
+        return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림
 
-
-# class GithubLanguageView(APIView) :
-#     def get(self, request):
-#         username = request.GET['username'] # username 받을거임
-#         url = 'https://api.github.com/users/%s' % username
-#         urlresponse = requests.get(url)
-#         print("그냥 response", urlresponse)
+    def username(self) :
+        r = requests.get('https://api.github.com/user', headers=headers)
+        username = r.json()
+        return username['login']
         
-#         ctx = urlresponse.json() # json() -> response를 json타입으로 인코딩되어 반환
-#         # print(type(ctx)) # 딕셔너리타입임
-#         data = {
-#             'username' : ctx['login'],
-#             'profile_img_url' : ctx['avatar_url']
-#         }
-#         return Response(data)  
 
-# @api_view(['GET'])
-# def events(request):
-#     body = request.data
-#     headers = {
-#         'Accept': 'application/json'
-#     }
+class UserRepositories(GithubUserView) :
 
-#     url = 'https://github.com/users/{username}/events'
-#     response = requests.post(url, data = body, headers = headers)   
+    def get(self, request) :
+        r = requests.get('https://api.github.com/user/repos', headers=headers, params=query )
+        ctx = r.json()
+        repositories = []
+        name = super().username()
+        
+        for x in ctx : 
+            if x['owner']['login'] == name :
+                repositories.append(x['name'])
+                data = {
+                    'repositories' : repositories
+                } 
 
-#     return Response(response.json())   
+        json_data = json.dumps(data) 
+        print(data, type(json_data)) 
+         
+        return JsonResponse(data, safe=False)
+        
+        # repositories = data.get('repositories')
+        # print(repositories)
+        # activity = [[0,0],[1,0],[2,0],[3,0]]
+        # for y in repositories :
+        #     r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , y), headers=headers, params=query )
+        #     r2 = r.json()
+        #     for x, y, z in r2 :
+        #         if y < 6 :
+        #             activity[0][1] += z 
+        #         elif y < 12 :
+        #             activity[1][1] += z
+        #         elif y < 18 :
+        #             activity[2][1] += z
+        #         elif y < 24 :
+        #             activity[3][1] += z 
+            
+        # print (activity)
+        # return JsonResponse(data, safe=False)
 
-# @api_view(['GET'])
-# def dash_commits(request):
-#     git = Github("token")
-#     org = git.get_organization('organization')
 
-#     for repo in org.get_repos():
-#         repository_commit_date = repo.get_commit(sha='master')
-#         stats_ = repository_commit_date.stats
-#         print(stats_.total)
+
