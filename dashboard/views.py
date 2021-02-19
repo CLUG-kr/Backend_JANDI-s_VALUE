@@ -14,8 +14,7 @@ import json
 # Create your views here.
 headers = {
             'Accept': 'application/json',
-            'Authorization' : 'token 949d07f51185f05a3b04a6a9eb66772b9a0cbe62',
-           
+            'Authorization' : 'token 4c37e3263a2badf36f345c93f093bf765216f074',
         }
 
 query = {
@@ -45,7 +44,7 @@ class GithubUserView(APIView) :
 
 class UserRepositories(GithubUserView) :
 
-    def get(self, request) :
+    def view_repos(self, request) :
         r = requests.get('https://api.github.com/user/repos', headers=headers, params=query )
         ctx = r.json()
         repositories = []
@@ -57,11 +56,10 @@ class UserRepositories(GithubUserView) :
                 data = {
                     'repositories' : repositories
                 } 
-
         json_data = json.dumps(data) 
         print(data, type(json_data)) 
          
-        return JsonResponse(data, safe=False)
+        return data
         
         # repositories = data.get('repositories')
         # print(repositories)
