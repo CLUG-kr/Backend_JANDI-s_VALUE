@@ -38,6 +38,7 @@ class GithubUserView(APIView) :
         return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림
 
     def username(self) :
+        # self,headers로 바뀌려나?
         r = requests.get('https://api.github.com/user', headers=headers)
         username = r.json()
         return username['login']
@@ -67,8 +68,9 @@ class GithubLanguageView(APIView) :
         return data #딕셔너리타입
 
     def get(self, request):
+        # a = request.get.토큰~
         githubUserView =GithubUserView()
-        username = githubUserView.username()
+        username = githubUserView.username() # 나중에 username()함수의 파라미터에 a변수 넣으면 될듯?
         print(username)
 
         repos=self.view_repos()
