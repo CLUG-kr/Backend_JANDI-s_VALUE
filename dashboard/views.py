@@ -28,16 +28,13 @@ class GithubUserView(APIView) :
         r = requests.get('https://api.github.com/user', headers=headers)
         # JSON 잘 넘김
         ctx = r.json()
-        
         print(ctx)
         data = {
             'username' : ctx['login'],
             'profile_img_url' : ctx['avatar_url']
         }
-        json_data = json.dumps(data)
-        # print(data, type(json_data))
-        
-        
+        json_data = json.dumps(data) #dictionary를 json으로 변환
+        # print(type(json_data)) # json.dumps를 쓰면 str타입(이게json타입이군..)으로 바뀌군..
         return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림
 
     def username(self) :
@@ -84,7 +81,6 @@ class UserRepositories(GithubUserView) :
             
         # print (activity)
         # return JsonResponse(data, safe=False)
-
 
 
 
