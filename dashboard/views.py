@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib.auth.models import User
 from rest_framework import permissions, status
 from rest_framework.decorators import api_view
@@ -13,8 +14,8 @@ import json
 
 # Create your views here.
 headers = {
-            'Accept': 'application/json',
-            'Authorization' : 'token 4c37e3263a2badf36f345c93f093bf765216f074',
+            'Accept': 'application/json', 
+            'Authorization' : 'token 25ec956f67e272636df4755ad3ec4c1973d31746',
         }
 
 query = {
@@ -42,24 +43,65 @@ class GithubUserView(APIView) :
         return username['login']
         
 
-class UserRepositories(GithubUserView) :
+class GithubLanguageView(APIView) :
 
-    def view_repos(self, request) :
+    def obtain_repositories(self) :
         r = requests.get('https://api.github.com/user/repos', headers=headers, params=query )
         ctx = r.json()
         repositories = []
-        name = super().username()
+
+        githubUserView =GithubUserView()
+        name = githubUserView.username()
+        # name = super().username()
         
         for x in ctx : 
             if x['owner']['login'] == name :
                 repositories.append(x['name'])
-                data = {
-                    'repositories' : repositories
-                } 
+        data = {
+            'repositories' : repositories
+        } 
+        print(type(data))
         json_data = json.dumps(data) 
-        print(data, type(json_data)) 
+        print(type(json_data)) 
          
-        return data
+        return data #딕셔너리타입
+
+    def get(self, request):
+        githubUserView =GithubUserView()
+        username = githubUserView.username()
+        print(username)
+
+        repos=self.view_repos()
+        repositories = repos['repositories']
+        print(len(repos['repositories']))
+
+        for repo in repositories :
+            url = 'https://api.github.com/repos/%s/%s/languages' %(username, repo)
+            # 한 5초걸림 ㅎㅎ ^^....
+            urlresponse = requests.get(url)
+            ctx = urlresponse.json()
+            print(ctx)
+            # print(ctx['Python'])
+
+            # to-do
+            # 1. 언어가 없으면 pass / 언어별로 담을 list 하나 생성
+            # 2. 해당 list에 ctx키값이 없으면 생성 후 값 담기 
+            # 3. 있으면 있는 곳에 값 담기
+            # 4. 완성한 list를 json형식으로 response 보내기 
+            
+        
+
+        return HttpResponse("hello world~~")
+        
+        # # print(urlresponse.json())
+        # # JSON 잘 넘김
+        # ctx = urlresponse.json()
+        # data = {
+        #     'username' : ctx['login'],
+        #     'profile_img_url' : ctx['avatar_url']
+        # }
+        # json_data = json.dumps(data)
+
         
         # repositories = data.get('repositories')
         # print(repositories)
@@ -79,6 +121,7 @@ class UserRepositories(GithubUserView) :
             
         # print (activity)
         # return JsonResponse(data, safe=False)
+
 
 
 

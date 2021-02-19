@@ -21,7 +21,6 @@ def token(request):
         'Accept': 'application/json',
         
     }
-
     url = 'https://github.com/login/oauth/access_token'
     response = requests.post(url, data = body, headers = headers)   
     
