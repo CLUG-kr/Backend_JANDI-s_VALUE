@@ -15,7 +15,6 @@ import json
 headers = {
             'Accept': 'application/json',
             'Authorization' : 'token 949d07f51185f05a3b04a6a9eb66772b9a0cbe62',
-           
         }
 
 query = {
@@ -62,28 +61,10 @@ class UserRepositories(GithubUserView) :
                 } 
 
         json_data = json.dumps(data) 
-        print(data, type(json_data)) 
          
         return JsonResponse(data, safe=False)
-        
-        # repositories = data.get('repositories')
-        # print(repositories)
-        # activity = [[0,0],[1,0],[2,0],[3,0]]
-        # for y in repositories :
-        #     r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , y), headers=headers, params=query )
-        #     r2 = r.json()
-        #     for x, y, z in r2 :
-        #         if y < 6 :
-        #             activity[0][1] += z 
-        #         elif y < 12 :
-        #             activity[1][1] += z
-        #         elif y < 18 :
-        #             activity[2][1] += z
-        #         elif y < 24 :
-        #             activity[3][1] += z 
-            
-        # print (activity)
-        # return JsonResponse(data, safe=False)
+
+
 
 
 
