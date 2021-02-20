@@ -1,5 +1,6 @@
 import os
 import datetime
+import dj_database_url
 """
 Django settings for config project.
 
