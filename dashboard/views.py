@@ -25,7 +25,7 @@ query = {
 
 class GithubUserView(APIView) :
     def get(self, request): #sarah api
-        rq = request.get('access_token')
+        rq = request.data.get("access_token")
         headers = { 'Accept' : 'application/json' }
         token_str = 'token ' + rq
         headers['Authorization'] = token_str
