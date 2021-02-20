@@ -12,12 +12,6 @@ from django.http import JsonResponse
 import requests
 import json
 
-# Create your views here.
-headers = {
-            'Accept': 'application/json', 
-            'Authorization' : 'token c9601d3950aafd2d96e9038f5c2a7c3042d697c2',
-        }
-
 query = {
      'visibility' : 'all',
      'per_page':  100, 
@@ -25,6 +19,10 @@ query = {
 
 class GithubUserView(APIView) :
     def get(self, request): #sarah api
+        rq = request.data.get("access_token")
+        headers = { 'Accept' : 'application/json' }
+        token_str = 'token ' + rq
+        headers['Authorization'] = token_str
         r = requests.get('https://api.github.com/user', headers=headers)
         # JSON 잘 넘김
         ctx = r.json()
@@ -36,6 +34,32 @@ class GithubUserView(APIView) :
         json_data = json.dumps(data) #dictionary를 json으로 변환
         # print(type(json_data)) # json.dumps를 쓰면 str타입(이게json타입이군..)으로 바뀌군..
         return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림   
+
+class ObtainRepositories(APIView) :
+    def get(self, request) : #repo list api
+        rq = request.data.get("access_token")
+        headers = { 'Accept' : 'application/json' }
+        token_str = 'token ' + rq
+        headers['Authorization'] = token_str
+        query = {
+            'visibility' : 'all',
+            'per_page':  100, 
+        }
+        r = requests.get('https://api.github.com/user/repos', headers=headers, params=query )
+        ctx = r.json()
+        repositories = []
+        
+        for x in ctx : 
+            if x['owner']['login'] == name :
+                repositories.append(x['name'])
+
+        data = {
+            'repositories' : repositories
+        } 
+        
+        json_data = json.dumps(data) 
+        return JsonResponse(data, safe=False)
+         
 
 class CommonFunctions :
 
@@ -94,27 +118,27 @@ class GithubLanguageView(APIView) :
 
         return HttpResponse("hello world~~")
 
-@api_view(['GET'])
-class DevTendencyView(CommonFunctions) :
-    CommonFunctions = CommonFunctions() 
+
+class DevTendencyView(APIView) :
 
     def get(request) :
-        
+        commonfunctions = CommonFunctions()
+        name = commonfunctions.username
+        data = commonfunctions.obtain_repositories
         repositories = data.get('repositories')
-        print(repositories)
         activity = [[0,0],[1,0],[2,0],[3,0]]
-        for y in repositories :
-            r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , y), headers=headers, params=query )
-            r2 = r.json()
-            for x, y, z in r2 :
-                if y < 6 :
-                    activity[0][1] += z 
-                elif y < 12 :
-                    activity[1][1] += z
-                elif y < 18 :
-                    activity[2][1] += z
-                elif y < 24 :
-                    activity[3][1] += z 
+        
+        r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , y), headers=headers, params=query )
+        r2 = r.json()
+        for x, y, z in r2 :
+            if y < 6 :
+                activity[0][1] += z 
+            elif y < 12 :
+                activity[1][1] += z
+            elif y < 18 :
+                activity[2][1] += z
+            elif y < 24 :
+                activity[3][1] += z 
             
         print (activity)
         return JsonResponse(data, safe=False)
