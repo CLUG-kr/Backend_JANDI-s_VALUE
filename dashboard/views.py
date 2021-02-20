@@ -98,7 +98,6 @@ class GithubLanguageView(APIView) :
 class DevTendencyView(APIView) :
 
     def get(self, request) :
-        print("!!!!!!!!!!!!!!!!!!!")
 
         at = request.GET['access_token']
         rn = request.GET['repository_name']
@@ -130,9 +129,24 @@ class DevTendencyView(APIView) :
             elif y < 24 :
                 activity[3][1] += z 
             
-        # 최댓값알고리즘
 
-        return HttpResponse("hello world~~")
+        max = activity[0][1]
+        # 최댓값알고리즘
+        for i in range(4):
+            if max < activity[i][1]:
+                max = activity[i][1]
+
+        tendency = {}
+        if max == activity[0][1] :
+            tendency["type"] = "새벽"
+        elif max == activity[1][1] :
+            tendency["type"] = "아침"
+        elif max == activity[2][1] :
+            tendency["type"] = "낮"
+        elif max == activity[3][1] :
+            tendency["type"] = "밤"
+
+        return JsonResponse(tendency, safe=False)
 
 
 
