@@ -66,6 +66,7 @@ class ObtainRepositories(APIView) :
         return JsonResponse(data, safe=False)
 
 
+
 class GithubLanguageView(APIView) :
     def get(self, request):
         # a = request.get.토큰~
@@ -94,19 +95,28 @@ class GithubLanguageView(APIView) :
 
 class DevTendencyView(APIView) :
 
-    def get(request) :
+    def get(self, request) :
+        print("!!!!!!!!!!!!!!!!!!!")
+
         at = request.GET['access_token']
         rn = request.GET['repository_name']
         headers = { 'Accept' : 'application/json' }
         token_str = 'token ' + at
+
         headers['Authorization'] = token_str
+        query = {
+            'visibility' : 'all',
+            'per_page':  100, 
+        }
 
+        name = commonFunctions.username(headers)
 
-
-        repositories = data.get('repositories')
         activity = [[0,0],[1,0],[2,0],[3,0]]
-        
-        r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , y), headers=headers, params=query )
+
+        headers2 = {
+            'Accept': 'application/json'
+        }
+        r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , rn), headers=headers2, params=query )
         r2 = r.json()
         for x, y, z in r2 :
             if y < 6 :
@@ -118,8 +128,9 @@ class DevTendencyView(APIView) :
             elif y < 24 :
                 activity[3][1] += z 
             
-        print (activity)
-        return JsonResponse(data, safe=False)
+        # 최댓값알고리즘
+
+        return HttpResponse("hello world~~")
 
 
 
