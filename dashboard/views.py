@@ -24,7 +24,7 @@ query = {
 }
 
 class GithubUserView(APIView) :
-    def get(self, request):
+    def get(self, request): #sarah api
         r = requests.get('https://api.github.com/user', headers=headers)
         # JSON 잘 넘김
         ctx = r.json()
@@ -35,16 +35,16 @@ class GithubUserView(APIView) :
         }
         json_data = json.dumps(data) #dictionary를 json으로 변환
         # print(type(json_data)) # json.dumps를 쓰면 str타입(이게json타입이군..)으로 바뀌군..
-        return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림
+        return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림   
 
-    def username(self) :
+class CommonFunctions :
+
+    def username(self) : # token 이용하여 username get api
         # self,headers로 바뀌려나?
         r = requests.get('https://api.github.com/user', headers=headers)
         username = r.json()
         return username['login']
-        
 
-class GithubLanguageView(APIView) :
 
     def obtain_repositories(self) :
         r = requests.get('https://api.github.com/user/repos', headers=headers, params=query )
@@ -67,16 +67,17 @@ class GithubLanguageView(APIView) :
          
         return data #딕셔너리타입
 
+
+class GithubLanguageView(APIView) :
+
     def get(self, request):
         # a = request.get.토큰~
         githubUserView =GithubUserView()
         username = githubUserView.username() # 나중에 username()함수의 파라미터에 a변수 넣으면 될듯?
-        print(username)
 
         repos=self.obtain_repositories()
         repositories = repos['repositories']
         print(len(repos['repositories']))
-
         for repo in repositories :
             url = 'https://api.github.com/repos/%s/%s/languages' %(username, repo)
             # 한 5초걸림 ㅎㅎ ^^....
@@ -93,25 +94,30 @@ class GithubLanguageView(APIView) :
 
         return HttpResponse("hello world~~")
 
+@api_view(['GET'])
+class DevTendencyView(CommonFunctions) :
+    CommonFunctions = CommonFunctions() 
+
+    def get(request) :
         
-        # repositories = data.get('repositories')
-        # print(repositories)
-        # activity = [[0,0],[1,0],[2,0],[3,0]]
-        # for y in repositories :
-        #     r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , y), headers=headers, params=query )
-        #     r2 = r.json()
-        #     for x, y, z in r2 :
-        #         if y < 6 :
-        #             activity[0][1] += z 
-        #         elif y < 12 :
-        #             activity[1][1] += z
-        #         elif y < 18 :
-        #             activity[2][1] += z
-        #         elif y < 24 :
-        #             activity[3][1] += z 
+        repositories = data.get('repositories')
+        print(repositories)
+        activity = [[0,0],[1,0],[2,0],[3,0]]
+        for y in repositories :
+            r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , y), headers=headers, params=query )
+            r2 = r.json()
+            for x, y, z in r2 :
+                if y < 6 :
+                    activity[0][1] += z 
+                elif y < 12 :
+                    activity[1][1] += z
+                elif y < 18 :
+                    activity[2][1] += z
+                elif y < 24 :
+                    activity[3][1] += z 
             
-        # print (activity)
-        # return JsonResponse(data, safe=False)
+        print (activity)
+        return JsonResponse(data, safe=False)
 
 
 
