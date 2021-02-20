@@ -11,11 +11,13 @@ from django.http import JsonResponse
 # from rest_framework import serializers
 import requests
 import json
-
+from .functions import *
 query = {
      'visibility' : 'all',
      'per_page':  100, 
 }
+
+commonFunctions = CommonFunctions()
 
 class GithubUserView(APIView) :
     def get(self, request): #sarah api
@@ -48,10 +50,13 @@ class ObtainRepositories(APIView) :
         r = requests.get('https://api.github.com/user/repos', headers=headers, params=query )
         ctx = r.json()
         repositories = []
-        
-        for x in ctx : 
+        name = commonFunctions.username(headers)
+        print(">>>>", name)
+        for x in ctx :
             if x['owner']['login'] == name :
                 repositories.append(x['name'])
+
+        print(repositories)
 
         data = {
             'repositories' : repositories
@@ -62,8 +67,8 @@ class ObtainRepositories(APIView) :
          
 
 class CommonFunctions :
-
-    def username(self) : # token 이용하여 username get api
+    
+    def username(self, headers) : # token 이용하여 username get api
         # self,headers로 바뀌려나?
         r = requests.get('https://api.github.com/user', headers=headers)
         username = r.json()
@@ -122,7 +127,6 @@ class GithubLanguageView(APIView) :
 class DevTendencyView(APIView) :
 
     def get(request) :
-        commonfunctions = CommonFunctions()
         name = commonfunctions.username
         data = commonfunctions.obtain_repositories
         repositories = data.get('repositories')
