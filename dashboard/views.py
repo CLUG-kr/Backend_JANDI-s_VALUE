@@ -64,41 +64,9 @@ class ObtainRepositories(APIView) :
         
         json_data = json.dumps(data) 
         return JsonResponse(data, safe=False)
-         
-
-class CommonFunctions :
-    
-    def username(self, headers) : # token 이용하여 username get api
-        # self,headers로 바뀌려나?
-        r = requests.get('https://api.github.com/user', headers=headers)
-        username = r.json()
-        return username['login']
-
-
-    def obtain_repositories(self) :
-        r = requests.get('https://api.github.com/user/repos', headers=headers, params=query )
-        ctx = r.json()
-        repositories = []
-
-        githubUserView =GithubUserView()
-        name = githubUserView.username()
-        # name = super().username()
-        
-        for x in ctx : 
-            if x['owner']['login'] == name :
-                repositories.append(x['name'])
-        data = {
-            'repositories' : repositories
-        } 
-        print(type(data))
-        json_data = json.dumps(data) 
-        print(type(json_data)) 
-         
-        return data #딕셔너리타입
 
 
 class GithubLanguageView(APIView) :
-
     def get(self, request):
         # a = request.get.토큰~
         githubUserView =GithubUserView()
@@ -127,8 +95,14 @@ class GithubLanguageView(APIView) :
 class DevTendencyView(APIView) :
 
     def get(request) :
-        name = commonfunctions.username
-        data = commonfunctions.obtain_repositories
+        at = request.GET['access_token']
+        rn = request.GET['repository_name']
+        headers = { 'Accept' : 'application/json' }
+        token_str = 'token ' + at
+        headers['Authorization'] = token_str
+
+
+
         repositories = data.get('repositories')
         activity = [[0,0],[1,0],[2,0],[3,0]]
         
