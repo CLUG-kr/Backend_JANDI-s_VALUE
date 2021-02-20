@@ -39,7 +39,7 @@ class GithubUserView(APIView) :
 
 class ObtainRepositories(APIView) :
     def get(self, request) : #repo list api
-        rq = request.data.get("access_token")
+        rq = request.GET['access_token']
         headers = { 'Accept' : 'application/json' }
         token_str = 'token ' + rq
         headers['Authorization'] = token_str
