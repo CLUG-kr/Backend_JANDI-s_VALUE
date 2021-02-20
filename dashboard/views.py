@@ -15,7 +15,7 @@ import json
 # Create your views here.
 headers = {
             'Accept': 'application/json', 
-            'Authorization' : 'token 368722c2c2cdac5ba32a4341db2bf310387e3a5b',
+            'Authorization' : 'token c9601d3950aafd2d96e9038f5c2a7c3042d697c2',
         }
 
 query = {
@@ -92,7 +92,6 @@ class GithubLanguageView(APIView) :
             # 4. 완성한 list를 json형식으로 response 보내기 
 
         return HttpResponse("hello world~~")
-
 
         
         # repositories = data.get('repositories')
