@@ -4,11 +4,9 @@ import json
 class CommonFunctions :
     
     def username(self, headers) : # token 이용하여 username get api
-        print("headers", headers)
+        print("username함수 호출 굳")
         r = requests.get('https://api.github.com/user', headers=headers)
-        print("111", r.json)
         username = r.json()
-        print(username)
         return username['login']
 
 

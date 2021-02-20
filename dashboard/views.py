@@ -66,35 +66,6 @@ class ObtainRepositories(APIView) :
         return JsonResponse(data, safe=False)
          
 
-class CommonFunctions :
-    
-    def username(self, headers) : # token 이용하여 username get api
-        # self,headers로 바뀌려나?
-        r = requests.get('https://api.github.com/user', headers=headers)
-        username = r.json()
-        return username['login']
-
-
-    def obtain_repositories(self) :
-        r = requests.get('https://api.github.com/user/repos', headers=headers, params=query )
-        ctx = r.json()
-        repositories = []
-
-        githubUserView =GithubUserView()
-        name = githubUserView.username()
-        # name = super().username()
-        
-        for x in ctx : 
-            if x['owner']['login'] == name :
-                repositories.append(x['name'])
-        data = {
-            'repositories' : repositories
-        } 
-        print(type(data))
-        json_data = json.dumps(data) 
-        print(type(json_data)) 
-         
-        return data #딕셔너리타입
 
 
 class GithubLanguageView(APIView) :
@@ -126,13 +97,28 @@ class GithubLanguageView(APIView) :
 
 class DevTendencyView(APIView) :
 
-    def get(request) :
-        name = commonfunctions.username
-        data = commonfunctions.obtain_repositories
-        repositories = data.get('repositories')
+    def get(self, request) :
+        print("!!!!!!!!!!!!!!!!!!!")
+
+        at = request.GET['access_token']
+        rn = request.GET['repository_name']
+        headers = { 'Accept' : 'application/json' }
+        token_str = 'token ' + at
+
+        headers['Authorization'] = token_str
+        query = {
+            'visibility' : 'all',
+            'per_page':  100, 
+        }
+
+        name = commonFunctions.username(headers)
+
         activity = [[0,0],[1,0],[2,0],[3,0]]
-        
-        r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , y), headers=headers, params=query )
+
+        headers2 = {
+            'Accept': 'application/json'
+        }
+        r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , rn), headers=headers2, params=query )
         r2 = r.json()
         for x, y, z in r2 :
             if y < 6 :
@@ -144,8 +130,9 @@ class DevTendencyView(APIView) :
             elif y < 24 :
                 activity[3][1] += z 
             
-        print (activity)
-        return JsonResponse(data, safe=False)
+        # 최댓값알고리즘
+
+        return HttpResponse("hello world~~")
 
 
 
