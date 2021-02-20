@@ -1,5 +1,7 @@
 import os
 import datetime
+import dj_database_url
+import django_heroku
 """
 Django settings for config project.
 
@@ -22,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'i@@b#=^2c-k9*9++e0z(ss!-!^o)qt1fqcp#0ip)b)-=r5lfg5'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'i@@b#=^2c-k9*9++e0z(ss!-!^o)qt1fqcp#0ip)b)-=r5lfg5')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['3.34.194.121:8000','localhost','127.0.0.1', '3.34.194.121', 'www.jandevelop.com','django-env.eba-mqjrbacj.us-west-2.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['*']
 
 CORS_ORIGIN_WHITELIST = ['http://localhost:3000'] #아까 설치한 corsheaders로 해당 서버와 연결할 서버의 url을 작성해준모습
 
@@ -85,13 +87,20 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'djangogirls',
+        'USER': 'name',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -130,7 +139,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # AUTH_USER_MODEL = 'jandis.User'
 
@@ -162,3 +171,4 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:3000' ,'http://localhost:3000'] 
 
+django_heroku.settings(locals())
