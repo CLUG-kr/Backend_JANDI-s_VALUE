@@ -12,12 +12,6 @@ from django.http import JsonResponse
 import requests
 import json
 
-# Create your views here.
-# headers = {
-#             'Accept': 'application/json', 
-#             'Authorization' : 'token c9601d3950aafd2d96e9038f5c2a7c3042d697c2',
-#         }
-
 query = {
      'visibility' : 'all',
      'per_page':  100, 
@@ -42,26 +36,30 @@ class GithubUserView(APIView) :
         return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림   
 
 class ObtainRepositories(APIView) :
-    def get(self) :
+    def get(self, request) : #repo list api
+        rq = request.data.get("access_token")
+        headers = { 'Accept' : 'application/json' }
+        token_str = 'token ' + rq
+        headers['Authorization'] = token_str
+        query = {
+            'visibility' : 'all',
+            'per_page':  100, 
+        }
         r = requests.get('https://api.github.com/user/repos', headers=headers, params=query )
         ctx = r.json()
         repositories = []
-
-        githubUserView =GithubUserView()
-        name = githubUserView.username()
-        # name = super().username()
         
         for x in ctx : 
             if x['owner']['login'] == name :
                 repositories.append(x['name'])
+
         data = {
             'repositories' : repositories
         } 
-        print(type(data))
+        
         json_data = json.dumps(data) 
-        print(type(json_data)) 
+        return JsonResponse(data, safe=False)
          
-        return data
 
 class CommonFunctions :
 
