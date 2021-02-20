@@ -1,6 +1,7 @@
 import os
 import datetime
 import dj_database_url
+import django_heroku
 """
 Django settings for config project.
 
@@ -26,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'i@@b#=^2c-k9*9++e0z(ss!-!^o)qt1fqcp#0ip)b)-=r5lfg5')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', False))
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -138,7 +139,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # AUTH_USER_MODEL = 'jandis.User'
 
@@ -170,3 +171,4 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:3000' ,'http://localhost:3000'] 
 
+django_heroku.settings(locals())
