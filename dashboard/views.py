@@ -116,11 +116,20 @@ class LanguageView(APIView) :
             'Accept': 'application/json'
         }
         r = requests.get('https://api.github.com/repos/%s/%s/languages' % (name, rn) , headers=headers, )
-        print(r.json())
+        ctx = r.json()
+        dic_key = list(ctx.keys())
+        dic_values = list(ctx.values())
+        print(dic_key)
+        print(type(dic_key))
+        print(dic_values)
+        print(type(dic_values))
+        print(len(ctx))
 
-        ctx=r.json()
-        
-        return JsonResponse(ctx, safe=False)
+        a=[]
+        for key,value in zip(dic_key,dic_values):
+            a.append(dict(language=key, value=value ))
+        print(a)
+        return JsonResponse(a, safe=False)
 
 
 
