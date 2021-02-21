@@ -305,6 +305,7 @@ class CommitView(APIView) :
         token_str = 'token ' + at
 
         headers['Authorization'] = token_str
+        headers['Time-Zone'] = 'Asia/Seoul'
         query = {
             'visibility' : 'all',
             'per_page':  100, 
