@@ -21,8 +21,7 @@ commonFunctions = CommonFunctions()
 
 class GithubUserView(APIView) :
     def get(self, request): #sarah api
-        # rq = request.GET['access_token']
-        rq = request.GET.get('access_token')
+        rq = request.GET['access_token']
         headers = { 'Accept' : 'application/json' }
         token_str = 'token ' + rq
         headers['Authorization'] = token_str
@@ -41,7 +40,6 @@ class GithubUserView(APIView) :
 class ObtainRepositories(APIView) :
     def get(self, request) : #repo list api
         rq = request.GET['access_token']
-        # rq = request.GET.get('access_token')
         headers = { 'Accept' : 'application/json' }
         token_str = 'token ' + rq
         headers['Authorization'] = token_str
@@ -53,12 +51,9 @@ class ObtainRepositories(APIView) :
         ctx = r.json()
         repositories = []
         name = commonFunctions.username(headers)
-        print(">>>>", name)
         for x in ctx :
             if x['owner']['login'] == name :
                 repositories.append(x['name'])
-
-        print(repositories)
 
         data = {
             'repositories' : repositories
@@ -69,18 +64,8 @@ class ObtainRepositories(APIView) :
 
 class ContributionView(APIView) :
     def get(self, request):
-        pass
-
-
-
-class LanguageView(APIView) :
-    def get(self, request):
-        print("aaaaaa")
-        # at = request.GET['access_token']
-        at = request.GET.get('access_token')
-        # rn = request.GET['repository_name']
-        rn = request.GET.get('repository_name')
-        print("aaaaaa")
+        at = request.GET['access_token']
+        rn = request.GET['repository_name']
         headers = { 'Accept' : 'application/json' }
         token_str = 'token ' + at
 
@@ -89,7 +74,37 @@ class LanguageView(APIView) :
             'visibility' : 'all',
             'per_page':  100, 
         }
-        print("aaaaaa")
+        
+        name = commonFunctions.username(headers)
+
+        headers2 = {
+            'Accept': 'application/json'
+        }
+        r = requests.get('https://api.github.com/repos/%s/%s/contributors' % (name, rn) , headers=headers, )
+        ctx=r.json()
+
+        contribute={}
+        for x in ctx : 
+            contribute[str(x['login'])] = x['contributions']
+
+        
+        return JsonResponse(contribute, safe=False)
+
+
+
+
+class LanguageView(APIView) :
+    def get(self, request):
+        at = request.GET['access_token']
+        rn = request.GET['repository_name']
+        headers = { 'Accept' : 'application/json' }
+        token_str = 'token ' + at
+
+        headers['Authorization'] = token_str
+        query = {
+            'visibility' : 'all',
+            'per_page':  100, 
+        }
         
         name = commonFunctions.username(headers)
 
@@ -100,8 +115,10 @@ class LanguageView(APIView) :
         print(r.json())
 
         ctx=r.json()
-
-
+        hello={}
+        for a in ctx :
+            ctx[login]
+        
         return JsonResponse(ctx, safe=False)
 
 
@@ -110,10 +127,8 @@ class DevTendencyView(APIView) :
 
     def get(self, request) :
 
-        # at = request.GET['access_token']
-        at= request.GET.get('access_token')
-        # rn = request.GET['repository_name']
-        rn = request.GET.get('repository_name')
+        at = request.GET['access_token']
+        rn = request.GET['repository_name']
         headers = { 'Accept' : 'application/json' }
         token_str = 'token ' + at
 
