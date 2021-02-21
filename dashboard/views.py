@@ -41,8 +41,6 @@ class GithubUserView(APIView) :
         # print(type(json_data)) # json.dumps를 쓰면 str타입(이게json타입이군..)으로 바뀌군..
         return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림 
 
-
-
 class ObtainRepositories(APIView) :
     def get(self, request) : #repo list api
         rq = request.GET['access_token']
@@ -83,9 +81,6 @@ class ContributionView(APIView) :
         
         name = commonFunctions.username(headers)
 
-        headers2 = {
-            'Accept': 'application/json'
-        }
         r = requests.get('https://api.github.com/repos/%s/%s/contributors' % (name, rn) , headers=headers, )
         json_data=r.json()
 
@@ -119,9 +114,6 @@ class LanguageView(APIView) :
         
         name = commonFunctions.username(headers)
 
-        headers2 = {
-            'Accept': 'application/json'
-        }
         r = requests.get('https://api.github.com/repos/%s/%s/languages' % (name, rn) , headers=headers, )
         json_data = r.json()
         dic_key = list(json_data.keys())
@@ -154,10 +146,7 @@ class DevTendencyView(APIView) :
 
         activity = [[0,0],[1,0],[2,0],[3,0]]
 
-        headers2 = {
-            'Accept': 'application/json'
-        }
-        r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , rn), headers=headers2, params=query )
+        r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , rn), headers=headers, params=query )
         r2 = r.json()
         for x, y, z in r2 :
             if y < 6 :
@@ -207,10 +196,8 @@ class DayTendencyView(APIView) :
         
         activity = [[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0]]
 
-        headers2 = {
-            'Accept': 'application/json'
-        }
-        r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , rn), headers=headers2, params=query )
+        
+        r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , rn), headers=headers, params=query )
         r2 = r.json()
         for x, y, z in r2 :
             if x == 0 :
@@ -269,10 +256,8 @@ class TimeTendencyView(APIView) :
                     [12,0],[13,0],[14,0],[15,0],[16,0],[17,0],
                     [18,0],[19,0],[20,0],[21,0],[22,0],[23,0]]
 
-        headers2 = {
-            'Accept': 'application/json'
-        }
-        r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , rn), headers=headers2, params=query )
+        
+        r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , rn), headers=headers, params=query )
         r2 = r.json()
         tendency = {}
 
@@ -327,11 +312,8 @@ class CommitView(APIView) :
 
         name = commonFunctions.username(headers)
 
-        headers2 = {
-            'Accept': 'application/json'
-        }
-
-        r = requests.get('https://api.github.com/repos/%s/%s/commits' % (name , rn), headers=headers2, params=query )
+    
+        r = requests.get('https://api.github.com/repos/%s/%s/commits' % (name , rn), headers=headers, params=query )
         ctx = r.json()
 
         today= datetime.date.today()
@@ -365,7 +347,7 @@ class CommitView(APIView) :
         print(yesterday_count)
         print(a_week_ago_count)
 
-        r2 = requests.get('https://api.github.com/repos/%s/%s/contributors' % (name, rn) , headers=headers2, )
+        r2 = requests.get('https://api.github.com/repos/%s/%s/contributors' % (name, rn) , headers=headers, )
         
         ctx2=r2.json()
 
