@@ -93,8 +93,6 @@ class ContributionView(APIView) :
         return JsonResponse(contribute, safe=False)
 
 
-
-
 class LanguageView(APIView) :
     def get(self, request):
         at = request.GET['access_token']
@@ -194,7 +192,7 @@ class DayTendencyView(APIView) :
         }
 
         name = commonFunctions.username(headers)
-
+        
         activity = [[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0]]
 
         headers2 = {
@@ -218,17 +216,23 @@ class DayTendencyView(APIView) :
             elif x == 6 :
                 activity[3][1] += z  
     
+        x1 = dict(day="Mon")
+        x1['value'] = activity[1][1]
+        x2 = dict(day="Tue")
+        x2['value'] = activity[1][1]
+        x3 = dict(day="Wed")
+        x3['value'] = activity[1][1]
+        x4 = dict(day="Thu")
+        x4['value'] = activity[1][1]
+        x5 = dict(day="Fri")
+        x5['value'] = activity[1][1]
+        x6 = dict(day="Sat")
+        x6['value'] = activity[1][1]
+        x7 = dict(day="Sun")
+        x7['value'] = activity[1][1]
 
-        tendency = {}
+        tendency = [x1,x2,x3,x4,x5,x6,x7]
         
-        tendency["Mon"] = activity[1][1]
-        tendency["Tue"] = activity[2][1]
-        tendency["Wed"] = activity[3][1]
-        tendency["Thu"] = activity[4][1]
-        tendency["Fri"] = activity[5][1]
-        tendency["Sat"] = activity[6][1]
-        tendency["Sun"] = activity[0][1]
-        print(tendency)
         return JsonResponse(tendency, safe=False)
 
 class TimeTendencyView(APIView) :
@@ -312,7 +316,6 @@ class TimeTendencyView(APIView) :
         tendency["23"] = activity[23][1]
         
         return JsonResponse(tendency, safe=False)
-
 
 class CommitView(APIView) :
     def get(self, request) :
