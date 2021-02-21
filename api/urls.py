@@ -17,6 +17,6 @@ urlpatterns = [
     # path('refresh/', refresh_jwt_token), #JWT를 받아 토큰을 검증하여 새로운 토큰 반환
     
     path('oauth/', include('oauth.urls')),
-    path('dashboard/', include('dashboard.urls')),
+    path('', include('dashboard.urls')),
 
 ]
