@@ -18,7 +18,7 @@ query = {
 }
 
 commonFunctions = CommonFunctions()
-
+                        
 class GithubUserView(APIView) :
     def get(self, request): #sarah api
         rq = request.GET['access_token']
@@ -35,7 +35,9 @@ class GithubUserView(APIView) :
         }
         json_data = json.dumps(data) #dictionary를 json으로 변환
         # print(type(json_data)) # json.dumps를 쓰면 str타입(이게json타입이군..)으로 바뀌군..
-        return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림   
+        return JsonResponse(data, safe=False) #data(dict)가 맞는 지 json_data(str) 맞는 지 헷갈림 
+
+
 
 class ObtainRepositories(APIView) :
     def get(self, request) : #repo list api
@@ -173,11 +175,174 @@ class DevTendencyView(APIView) :
             tendency["type"] = "낮"
         elif max == activity[3][1] :
             tendency["type"] = "밤"
+        print(activity)
+        return JsonResponse(tendency, safe=False)
 
+class DayTendencyView(APIView) :
+    
+    def get(self, request) :
+
+        at = request.GET['access_token']
+        rn = request.GET['repository_name']
+        headers = { 'Accept' : 'application/json' }
+        token_str = 'token ' + at
+
+        headers['Authorization'] = token_str
+        query = {
+            'visibility' : 'all',
+            'per_page':  100, 
+        }
+
+        name = commonFunctions.username(headers)
+
+        activity = [[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0]]
+
+        headers2 = {
+            'Accept': 'application/json'
+        }
+        r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , rn), headers=headers2, params=query )
+        r2 = r.json()
+        for x, y, z in r2 :
+            if x == 0 :
+                activity[0][1] += z 
+            elif x == 1 :
+                activity[1][1] += z 
+            elif x == 2 :
+                activity[2][1] += z 
+            elif x == 3 :
+                activity[3][1] += z
+            elif x == 4 :
+                activity[1][1] += z 
+            elif x == 5 :
+                activity[2][1] += z 
+            elif x == 6 :
+                activity[3][1] += z  
+    
+
+        tendency = {}
+        
+        tendency["Mon"] = activity[1][1]
+        tendency["Tue"] = activity[2][1]
+        tendency["Wed"] = activity[3][1]
+        tendency["Thu"] = activity[4][1]
+        tendency["Fri"] = activity[5][1]
+        tendency["Sat"] = activity[6][1]
+        tendency["Sun"] = activity[0][1]
+        print(tendency)
+        return JsonResponse(tendency, safe=False)
+
+class TimeTendencyView(APIView) :
+    
+    def get(self, request) :
+
+        at = request.GET['access_token']
+        rn = request.GET['repository_name']
+        headers = { 'Accept' : 'application/json' }
+        token_str = 'token ' + at
+
+        headers['Authorization'] = token_str
+        query = {
+            'visibility' : 'all',
+            'per_page':  100, 
+        }
+
+        name = commonFunctions.username(headers)
+
+        activity = [[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],
+                    [6,0],[7,0],[8,0],[9,0],[10,0],[11,0],
+                    [12,0],[13,0],[14,0],[15,0],[16,0],[17,0],
+                    [18,0],[19,0],[20,0],[21,0],[22,0],[23,0]]
+
+        headers2 = {
+            'Accept': 'application/json'
+        }
+        r = requests.get('https://api.github.com/repos/%s/%s/stats/punch_card' % (name , rn), headers=headers2, params=query )
+        r2 = r.json()
+        tendency = {}
+
+        for x, y, z in r2 :
+            if y == 0 : activity[0][1] += z 
+            elif y == 1 : activity[1][1] += z 
+            elif y == 2 : activity[2][1] += z 
+            elif y == 3 : activity[3][1] += z
+            elif y == 4 : activity[4][1] += z 
+            elif y == 5 : activity[5][1] += z 
+            elif y == 6 : activity[6][1] += z  
+            elif y == 7 : activity[7][1] += z 
+            elif y == 8 : activity[8][1] += z 
+            elif y == 9 : activity[9][1] += z
+            elif y == 10 : activity[10][1] += z 
+            elif y == 11 : activity[11][1] += z 
+            elif y == 12 : activity[12][1] += z 
+            elif y == 13 : activity[13][1] += z 
+            elif y == 14 : activity[14][1] += z 
+            elif y == 15 : activity[15][1] += z
+            elif y == 16 : activity[16][1] += z 
+            elif y == 17 : activity[17][1] += z 
+            elif y == 18 : activity[18][1] += z 
+            elif y == 19 : activity[19][1] += z 
+            elif y == 20 : activity[20][1] += z 
+            elif y == 21 : activity[21][1] += z
+            elif y == 22 : activity[22][1] += z 
+            elif y == 23 : activity[23][1] += z 
+
+        tendency["0"] = activity[0][1]
+        tendency["1"] = activity[1][1]
+        tendency["2"] = activity[2][1]
+        tendency["3"] = activity[3][1]
+        tendency["4"] = activity[4][1]
+        tendency["5"] = activity[5][1]
+        tendency["6"] = activity[6][1]
+        tendency["7"] = activity[7][1]
+        tendency["8"] = activity[8][1]
+        tendency["9"] = activity[9][1]
+        tendency["10"] = activity[10][1]
+        tendency["11"] = activity[11][1]
+        tendency["12"] = activity[12][1]
+        tendency["13"] = activity[13][1]
+        tendency["14"] = activity[14][1]
+        tendency["15"] = activity[15][1]
+        tendency["16"] = activity[16][1]
+        tendency["17"] = activity[17][1]
+        tendency["18"] = activity[18][1]
+        tendency["19"] = activity[19][1]
+        tendency["20"] = activity[20][1]
+        tendency["21"] = activity[21][1]
+        tendency["22"] = activity[22][1]
+        tendency["23"] = activity[23][1]
+        
         return JsonResponse(tendency, safe=False)
 
 
+class CommitView(APIView) :
+    def get(self, request) :
 
+        at = request.GET['access_token']
+        rn = request.GET['repository_name']
+        headers = { 'Accept' : 'application/json' }
+        token_str = 'token ' + at
 
+        headers['Authorization'] = token_str
+        query = {
+            'visibility' : 'all',
+            'per_page':  100, 
+        }
+
+        name = commonFunctions.username(headers)
+
+        headers2 = {
+            'Accept': 'application/json'
+        }
+
+        r = requests.get('https://api.github.com/repos/%s/%s/commits' % (name , rn), headers=headers2, params=query )
+        ctx = r.json()
+        datelist = []
+        
+        for x in ctx :
+            print(x['commit']['author']['date'])
+            datelist.append(x['commit']['author']['date'])  
+
+        print(datelist)
+        return HttpResponse("hello")
 
 
