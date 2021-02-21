@@ -87,14 +87,25 @@ class ContributionView(APIView) :
             'Accept': 'application/json'
         }
         r = requests.get('https://api.github.com/repos/%s/%s/contributors' % (name, rn) , headers=headers, )
-        ctx=r.json()
+        json_data=r.json()
 
         contribute={}
-        for x in ctx : 
+        for x in json_data : 
             contribute[str(x['login'])] = x['contributions']
-
         
-        return JsonResponse(contribute, safe=False)
+        dic_key = list(contribute.keys())
+        dic_values = list(contribute.values())
+        print(dic_key)
+        print(type(dic_key))
+        print(dic_values)
+        print(type(dic_values))
+
+        ctx=[]
+        for key,value in zip(dic_key,dic_values):
+            ctx.append(dict(username=key, count=value ))
+        print(ctx)
+
+        return JsonResponse(ctx, safe=False)
 
 
 class LanguageView(APIView) :
