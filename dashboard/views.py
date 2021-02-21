@@ -300,30 +300,12 @@ class TimeTendencyView(APIView) :
             elif y == 22 : activity[22][1] += z 
             elif y == 23 : activity[23][1] += z 
 
-        tendency["0"] = activity[0][1]
-        tendency["1"] = activity[1][1]
-        tendency["2"] = activity[2][1]
-        tendency["3"] = activity[3][1]
-        tendency["4"] = activity[4][1]
-        tendency["5"] = activity[5][1]
-        tendency["6"] = activity[6][1]
-        tendency["7"] = activity[7][1]
-        tendency["8"] = activity[8][1]
-        tendency["9"] = activity[9][1]
-        tendency["10"] = activity[10][1]
-        tendency["11"] = activity[11][1]
-        tendency["12"] = activity[12][1]
-        tendency["13"] = activity[13][1]
-        tendency["14"] = activity[14][1]
-        tendency["15"] = activity[15][1]
-        tendency["16"] = activity[16][1]
-        tendency["17"] = activity[17][1]
-        tendency["18"] = activity[18][1]
-        tendency["19"] = activity[19][1]
-        tendency["20"] = activity[20][1]
-        tendency["21"] = activity[21][1]
-        tendency["22"] = activity[22][1]
-        tendency["23"] = activity[23][1]
+        tendency = []
+        
+        for i in range(0, 24) :
+            d = dict(time=i,value=activity[i][1])
+            dic = d.copy()
+            tendency.append(dic)
         
         return JsonResponse(tendency, safe=False)
 
