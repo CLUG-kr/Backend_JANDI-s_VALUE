@@ -228,19 +228,19 @@ class DayTendencyView(APIView) :
             elif x == 6 :
                 activity[3][1] += z  
     
-        x1 = dict(day="Mon")
+        x1 = dict(day="월")
         x1['value'] = activity[1][1]
-        x2 = dict(day="Tue")
+        x2 = dict(day="화")
         x2['value'] = activity[2][1]
-        x3 = dict(day="Wed")
+        x3 = dict(day="수")
         x3['value'] = activity[3][1]
-        x4 = dict(day="Thu")
+        x4 = dict(day="목")
         x4['value'] = activity[4][1]
-        x5 = dict(day="Fri")
+        x5 = dict(day="금")
         x5['value'] = activity[5][1]
-        x6 = dict(day="Sat")
+        x6 = dict(day="토")
         x6['value'] = activity[6][1]
-        x7 = dict(day="Sun")
+        x7 = dict(day="일")
         x7['value'] = activity[0][1]
 
         tendency = [x1,x2,x3,x4,x5,x6,x7]
