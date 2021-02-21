@@ -67,6 +67,10 @@ class ObtainRepositories(APIView) :
         json_data = json.dumps(data) 
         return JsonResponse(data, safe=False)
 
+class ContributionView(APIView) :
+    def get(self, request):
+        pass
+
 
 
 class LanguageView(APIView) :
@@ -100,37 +104,6 @@ class LanguageView(APIView) :
 
         return JsonResponse(ctx, safe=False)
 
-
-class ContributionView(APIView) :
-    def get(self, request):
-        print("aaaaaa")
-        # at = request.GET['access_token']
-        at = request.GET.get('access_token')
-        # rn = request.GET['repository_name']
-        rn = request.GET.get('repository_name')
-        print("aaaaaa")
-        headers = { 'Accept' : 'application/json' }
-        token_str = 'token ' + at
-
-        headers['Authorization'] = token_str
-        query = {
-            'visibility' : 'all',
-            'per_page':  100, 
-        }
-        print("aaaaaa")
-        
-        name = commonFunctions.username(headers)
-
-        headers2 = {
-            'Accept': 'application/json'
-        }
-        r = requests.get('https://api.github.com/repos/%s/%s/languages' % (name, rn) , headers=headers, )
-        print(r.json())
-
-        ctx=r.json()
-
-
-        return JsonResponse(ctx, safe=False)
 
 
 class DevTendencyView(APIView) :

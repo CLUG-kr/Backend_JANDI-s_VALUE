@@ -6,5 +6,6 @@ urlpatterns = [
     path('repolist/', ObtainRepositories.as_view(), name='ObtainRepositories'),
     path('tendency/', DevTendencyView.as_view(), name='DevTendencyView'),
     path('language/', LanguageView.as_view(), name='LanguageView'),
+    path('contribution/', ContributionView.as_view(), name='ContributionView'),
     
 ]
