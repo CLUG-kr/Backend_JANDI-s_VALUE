@@ -15,6 +15,15 @@ from .functions import *
 
 import time
 import datetime 
+from django.utils import timezone
+
+
+def convert_to_localtime(utctime):
+    fmt = '%d/%m/%Y %H:%M'
+    utc = utctime.replace(tzinfo=pytz.UTC)
+    localtz = utc.astimezone(timezone.get_current_timezone())
+    return localtz.strftime(fmt)
+
 
 query = {
      'visibility' : 'all',
@@ -317,7 +326,18 @@ class CommitView(APIView) :
         r = requests.get('https://api.github.com/repos/%s/%s/commits' % (name , rn), headers=headers, params=query )
         ctx = r.json()
 
-        today= datetime.date.today()
+        today= datetime.datetime.now()
+        print(today)
+        # 9 시간 전
+        nine_hour_later = today - datetime.timedelta(hours=9)
+        
+        # 1. 오늘 시간 객체 형식 변환 
+        # 2. 9시간 전으로 바꾼다
+        # 3. 
+        # 4. 
+        # print(str(nine_hour_later)[:16])
+        # print(">>>>>>>>>>>>>>>>>>>")
+        
         yesterday=today - datetime.timedelta(1)
         a_week_ago = today -datetime.timedelta(7) 
 
@@ -330,7 +350,8 @@ class CommitView(APIView) :
         a_week_ago_count=0
 
         for x in ctx :
-            print(x['commit']['author']['date'][:10])
+            print(x['commit']['author']['date'][:16])   #[:10]
+            # print(type(x['commit']['author']['date']))
 
         for x in ctx :
             current_date = x['commit']['author']['date'][:10]
