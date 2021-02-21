@@ -102,7 +102,7 @@ class ContributionView(APIView) :
 
         ctx=[]
         for key,value in zip(dic_key,dic_values):
-            ctx.append(dict(username=key, count=value ))
+            ctx.append(dict(username=key, value=value ))
         print(ctx)
 
         return JsonResponse(ctx, safe=False)
