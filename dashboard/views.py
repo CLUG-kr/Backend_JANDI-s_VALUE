@@ -95,10 +95,6 @@ class ContributionView(APIView) :
         
         dic_key = list(contribute.keys())
         dic_values = list(contribute.values())
-        print(dic_key)
-        print(type(dic_key))
-        print(dic_values)
-        print(type(dic_values))
 
         ctx=[]
         for key,value in zip(dic_key,dic_values):
@@ -127,20 +123,15 @@ class LanguageView(APIView) :
             'Accept': 'application/json'
         }
         r = requests.get('https://api.github.com/repos/%s/%s/languages' % (name, rn) , headers=headers, )
-        ctx = r.json()
-        dic_key = list(ctx.keys())
-        dic_values = list(ctx.values())
-        print(dic_key)
-        print(type(dic_key))
-        print(dic_values)
-        print(type(dic_values))
-        print(len(ctx))
+        json_data = r.json()
+        dic_key = list(json_data.keys())
+        dic_values = list(json_data.values())
 
-        a=[]
+        ctx=[]
         for key,value in zip(dic_key,dic_values):
-            a.append(dict(language=key, value=value ))
-        print(a)
-        return JsonResponse(a, safe=False)
+            ctx.append(dict(language=key, value=value ))
+        print(ctx)
+        return JsonResponse(ctx, safe=False)
 
 
 
