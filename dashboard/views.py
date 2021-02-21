@@ -209,11 +209,11 @@ class DayTendencyView(APIView) :
             elif x == 3 :
                 activity[3][1] += z
             elif x == 4 :
-                activity[1][1] += z 
+                activity[4][1] += z 
             elif x == 5 :
-                activity[2][1] += z 
+                activity[5][1] += z 
             elif x == 6 :
-                activity[3][1] += z  
+                activity[6][1] += z  
     
         x1 = dict(day="월")
         x1['value'] = activity[1][1]
