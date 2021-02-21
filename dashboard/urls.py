@@ -8,5 +8,5 @@ urlpatterns = [
     path('tendency/', DevTendencyView.as_view(), name='DevTendencyView'),
     path('language/', LanguageView.as_view(), name='LanguageView'),
     path('day/',DayTendencyView.as_view(),name='DayTendencyView'),
-    
+    path('time/', TimeTendencyView.as_view(), name='TimeTendencyView')
 ]
