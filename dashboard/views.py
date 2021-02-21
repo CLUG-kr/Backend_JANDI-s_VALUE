@@ -331,9 +331,6 @@ class CommitView(APIView) :
         for x in ctx :
             print(x['commit']['author']['date'][:10])
 
-        
-        # 여기에 다 담기.....
-
         for x in ctx :
             current_date = x['commit']['author']['date'][:10]
             if str_today ==  current_date :
