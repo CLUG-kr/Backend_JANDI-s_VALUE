@@ -12,6 +12,10 @@ from django.http import JsonResponse
 import requests
 import json
 from .functions import *
+
+import time
+import datetime 
+
 query = {
      'visibility' : 'all',
      'per_page':  100, 
@@ -117,9 +121,6 @@ class LanguageView(APIView) :
         print(r.json())
 
         ctx=r.json()
-        hello={}
-        for a in ctx :
-            ctx[login]
         
         return JsonResponse(ctx, safe=False)
 
@@ -336,13 +337,47 @@ class CommitView(APIView) :
 
         r = requests.get('https://api.github.com/repos/%s/%s/commits' % (name , rn), headers=headers2, params=query )
         ctx = r.json()
-        datelist = []
-        
+
+        today= datetime.date.today()
+        yesterday=today - datetime.timedelta(1)
+        a_week_ago = today -datetime.timedelta(7) 
+
+        str_today=str(today)
+        str_yesterday=str(yesterday)
+        str_a_week_ago=str(a_week_ago)
+
+        today_count=0
+        yesterday_count=0
+        a_week_ago_count=0
+
         for x in ctx :
-            print(x['commit']['author']['date'])
-            datelist.append(x['commit']['author']['date'])  
+            print(x['commit']['author']['date'][:10])
 
-        print(datelist)
+        contribute={}
+        # 여기에 다 담기.....
+
+        for x in ctx :
+            current_date = x['commit']['author']['date'][:10]
+            if str_today ==  current_date :
+                today_count=today_count+1
+            elif str_yesterday == current_date :
+                yesterday_count=yesterday_count+1
+            elif str_a_week_ago == current_date :
+                a_week_ago_cuont=a_week_ago_count+1
+
+        print(today_count)
+        print(yesterday_count)
+        print(a_week_ago_count)
+
+        r2 = requests.get('https://api.github.com/repos/%s/%s/contributors' % (name, rn) , headers=headers2, )
+        
+        ctx2=r2.json()
+
+        # contribute['total_commit'] = 0 
+        # pirnt(contribute)
+        # for x in ctx : 
+        #     contribute["total_commit"] =  contribute["total_commit"] + x['contributions']
+        # print(contribute)
+            
         return HttpResponse("hello")
-
 
