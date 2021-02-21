@@ -219,17 +219,17 @@ class DayTendencyView(APIView) :
         x1 = dict(day="Mon")
         x1['value'] = activity[1][1]
         x2 = dict(day="Tue")
-        x2['value'] = activity[1][1]
+        x2['value'] = activity[2][1]
         x3 = dict(day="Wed")
-        x3['value'] = activity[1][1]
+        x3['value'] = activity[3][1]
         x4 = dict(day="Thu")
-        x4['value'] = activity[1][1]
+        x4['value'] = activity[4][1]
         x5 = dict(day="Fri")
-        x5['value'] = activity[1][1]
+        x5['value'] = activity[5][1]
         x6 = dict(day="Sat")
-        x6['value'] = activity[1][1]
+        x6['value'] = activity[6][1]
         x7 = dict(day="Sun")
-        x7['value'] = activity[1][1]
+        x7['value'] = activity[0][1]
 
         tendency = [x1,x2,x3,x4,x5,x6,x7]
         
