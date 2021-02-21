@@ -21,7 +21,8 @@ commonFunctions = CommonFunctions()
 
 class GithubUserView(APIView) :
     def get(self, request): #sarah api
-        rq = request.data.get("access_token")
+        rq = request.GET['access_token']
+        # rq = request.GET.get('access_token')
         headers = { 'Accept' : 'application/json' }
         token_str = 'token ' + rq
         headers['Authorization'] = token_str
@@ -40,6 +41,7 @@ class GithubUserView(APIView) :
 class ObtainRepositories(APIView) :
     def get(self, request) : #repo list api
         rq = request.GET['access_token']
+        # rq = request.GET.get('access_token')
         headers = { 'Accept' : 'application/json' }
         token_str = 'token ' + rq
         headers['Authorization'] = token_str
@@ -64,35 +66,48 @@ class ObtainRepositories(APIView) :
         
         json_data = json.dumps(data) 
         return JsonResponse(data, safe=False)
-         
 
 
 
-class GithubLanguageView(APIView) :
-
+class LanguageView(APIView) :
     def get(self, request):
-        # a = request.get.토큰~
-        githubUserView =GithubUserView()
-        username = githubUserView.username() # 나중에 username()함수의 파라미터에 a변수 넣으면 될듯?
+        print("aaaaaa")
+        at = request.GET['access_token']
+        # at = request.GET.get('access_tokem')
+        rn = request.GET['repository_name']
+        # rn = request.GET.get('respository_name')
+        print("aaaaaa")
+        headers = { 'Accept' : 'application/json' }
+        token_str = 'token ' + at
 
-        repos=self.obtain_repositories()
-        repositories = repos['repositories']
-        print(len(repos['repositories']))
-        for repo in repositories :
-            url = 'https://api.github.com/repos/%s/%s/languages' %(username, repo)
-            # 한 5초걸림 ㅎㅎ ^^....
-            urlresponse = requests.get(url)
-            ctx = urlresponse.json()
-            print(ctx)
-            # print(ctx['Python'])
+        headers['Authorization'] = token_str
+        query = {
+            'visibility' : 'all',
+            'per_page':  100, 
+        }
 
-            # to-do
-            # 1. 언어가 없으면 pass / 언어별로 담을 list 하나 생성
-            # 2. 해당 list에 ctx키값이 없으면 생성 후 값 담기 
-            # 3. 있으면 있는 곳에 값 담기
-            # 4. 완성한 list를 json형식으로 response 보내기 
+        username = commonFunctions.username(headers)
 
-        return HttpResponse("hello world~~")
+        headers2 = {
+            'Accept': 'application/json'
+        }
+
+        # repos=self.obtain_repositories()
+        # repositories = repos['repositories']
+        # print(len(repos['repositories']))
+        r = requests.get('https://api.github.com/repos/%s/%s/languages' %(username, rn) , headers=headers2, params=query )
+        ctx= r.json()
+        print(ctx)
+
+        # print(ctx['Python'])
+
+        # to-do
+        # 1. 언어가 없으면 pass / 언어별로 담을 list 하나 생성
+        # 2. 해당 list에 ctx키값이 없으면 생성 후 값 담기 
+        # 3. 있으면 있는 곳에 값 담기
+        # 4. 완성한 list를 json형식으로 response 보내기 
+
+        return Respones(ctx)
 
 
 class DevTendencyView(APIView) :
