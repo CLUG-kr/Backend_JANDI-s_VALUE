@@ -351,15 +351,20 @@ class CommitView(APIView) :
         utcYesterday = midnight_utcToday - datetime.timedelta(hours=24)
         print("utc어제 ", utcYesterday)
 
+        utc6daysago = midnight_utcToday - datetime.timedelta(5)
+        print("utc6일전 ", utc6daysago)
+        utc7daysago = midnight_utcToday - datetime.timedelta(6)
+        print("utc7일전 ", utc7daysago)
+
         today_count=0
         yesterday_count=0
-        # a_week_ago_count=0
+        a_week_ago_count=0
 
         date_list=[]
         for x in ctx :
             current_commit =x['commit']['author']['date'][:16]
             date_time_obj = datetime.datetime.strptime(current_commit, '%Y-%m-%dT%H:%M')
-            # print("중요", date_time_obj)
+            print("중요", date_time_obj)
             date_list.append(date_time_obj)
 
         for dt in date_list :
@@ -367,10 +372,12 @@ class CommitView(APIView) :
                 today_count=today_count+1
             elif midnight_utcToday >= dt and dt >= utcYesterday:
                 yesterday_count=yesterday_count+1
+            elif utc6daysago >= dt and dt >= utc7daysago:
+                a_week_ago_count=a_week_ago_count+1
 
         print(today_count)
         print(yesterday_count)
-        # print(a_week_ago_count)
+        print(a_week_ago_count)
 
         r2 = requests.get('https://api.github.com/repos/%s/%s/contributors' % (name, rn) , headers=headers, )
         
@@ -384,7 +391,7 @@ class CommitView(APIView) :
         #     total_commits=total_commits+x['contributions']
 
         
-        ctx = dict(today=today_count, yesterday=yesterday_count)
+        ctx = dict(today=today_count, yesterday=yesterday_count  )
         # ctx=[]
         # ctx.append(contribute)
 
