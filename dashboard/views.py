@@ -326,41 +326,54 @@ class CommitView(APIView) :
         r = requests.get('https://api.github.com/repos/%s/%s/commits' % (name , rn), headers=headers, params=query )
         ctx = r.json()
 
-        today= datetime.datetime.now()
-        print(today)
-        # 9 시간 전
-        nine_hour_later = today - datetime.timedelta(hours=9)
-        
-        # 1. 오늘 시간 객체 형식 변환 
-        # 2. 9시간 전으로 바꾼다
-        # 3. 
-        # 4. 
-        # print(str(nine_hour_later)[:16])
-        # print(">>>>>>>>>>>>>>>>>>>")
-        
-        yesterday=today - datetime.timedelta(1)
-        a_week_ago = today -datetime.timedelta(7) 
+        # 2021-02-23 02:46:17.022402
 
-        str_today=str(today)
-        str_yesterday=str(yesterday)
-        str_a_week_ago=str(a_week_ago)
+        koreaToday =datetime.datetime.now()
+        print(koreaToday)
+        str_KoreaToday =koreaToday.strftime('%Y-%m-%d %H:%M:%S .%f') #korea기준
+        slice_str=str_KoreaToday[:10]
+        # print(a)
+        # print(type(today_new))
+        plus_koreaToday=slice_str+"T00:00"
+        # print(today_new_midnight)
+        midnight_koreaToday = datetime.datetime.strptime(plus_koreaToday, '%Y-%m-%dT%H:%M')
+        print("한국 자정" , midnight_koreaToday)
+
+        midnight_utcToday = midnight_koreaToday - datetime.timedelta(hours=9)
+        print("미국 자정" , midnight_utcToday)
+        # str_utcToday= utcToday.strftime('%Y-%m-%d')
+        # # T%H:%M')
+        # midnight_str_utcToday = str_utcToday+"T00:00"
+        # utcToday = datetime.datetime.strptime(str_utcToday, '%Y-%m-%dT%H:%M')
+        # print("중요" , utcToday)
+        # print("타입" , type(utcToday))
+        
+        utcYesterday = midnight_utcToday - datetime.timedelta(hours=24)
+        print("utc어제 ", utcYesterday)
+
+        utc6daysago = midnight_utcToday - datetime.timedelta(5)
+        print("utc6일전 ", utc6daysago)
+        utc7daysago = midnight_utcToday - datetime.timedelta(6)
+        print("utc7일전 ", utc7daysago)
 
         today_count=0
         yesterday_count=0
         a_week_ago_count=0
 
+        date_list=[]
         for x in ctx :
-            print(x['commit']['author']['date'][:16])   #[:10]
-            # print(type(x['commit']['author']['date']))
+            current_commit =x['commit']['author']['date'][:16]
+            date_time_obj = datetime.datetime.strptime(current_commit, '%Y-%m-%dT%H:%M')
+            print("중요", date_time_obj)
+            date_list.append(date_time_obj)
 
-        for x in ctx :
-            current_date = x['commit']['author']['date'][:10]
-            if str_today ==  current_date :
+        for dt in date_list :
+            if midnight_utcToday >= dt and dt >= midnight_koreaToday :
                 today_count=today_count+1
-            elif str_yesterday == current_date :
+            elif midnight_utcToday >= dt and dt >= utcYesterday:
                 yesterday_count=yesterday_count+1
-            elif str_a_week_ago == current_date :
-                a_week_ago_cuont=a_week_ago_count+1
+            elif utc6daysago >= dt and dt >= utc7daysago:
+                a_week_ago_count=a_week_ago_count+1
 
         print(today_count)
         print(yesterday_count)
@@ -378,7 +391,7 @@ class CommitView(APIView) :
         #     total_commits=total_commits+x['contributions']
 
         
-        ctx = dict(today=today_count, yesterday=yesterday_count, weekAgo=a_week_ago_count)
+        ctx = dict(today=today_count, yesterday=yesterday_count  )
         # ctx=[]
         # ctx.append(contribute)
 
