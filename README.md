@@ -40,9 +40,6 @@
 >   - [Django REST Framework JWT 1.11.0](https://github.com/jpadilla/django-rest-framework-jwt) 
 >  <br/>
 > 
-> - FRONTEND (React Webapp Client)
->  <br/>
-> 
 > - Database
 >   - [SQLite 3.34](https://www.sqlite.org/releaselog/3_34_1.html)
 >   - 향후 [MySQL 5.6](https://dev.mysql.com/downloads/mysql/5.6.html) 로 upgrade 예정
@@ -127,12 +124,6 @@
 >     path('dashboard/time/', TimeTendencyView.as_view(), name='TimeTendencyView')
 > ]
 > ```
-
-### Frontend Components
-
-> **Component description**
-> 
->
 
 ### System configuration
 > 
