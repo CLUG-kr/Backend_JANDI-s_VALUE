@@ -383,17 +383,13 @@ class CommitView(APIView) :
         
         ctx2=r2.json()
 
-        # total_commits=0
-        
-        # for x in ctx2 :
-        #     print(x['contributions'])
-        #     print(type(x['contributions']))
-        #     total_commits=total_commits+x['contributions']
+        totalContributor=0
 
+        for x in ctx2 :
+            print(x['contributions'])
+            totalContributor=totalContributor+1
         
-        ctx = dict(today=today_count, yesterday=yesterday_count  )
-        # ctx=[]
-        # ctx.append(contribute)
+        ctx = dict(today=today_count, yesterday=yesterday_count ,totalContributor=totalContributor )
 
             
         return JsonResponse(ctx,safe=False )
