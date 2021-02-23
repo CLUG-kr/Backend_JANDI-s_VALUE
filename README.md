@@ -56,7 +56,7 @@
 >   |**GET** |/validate/|READ| Access Token |JWT를 받아 토큰을 검증하여 상태코드로 반환|
 >   |**POST** |/refresh/|CREATE| Access Token |JWT를 받아 토큰을 검증하여 새로운 토큰 반환|
 > 
-> - 회원(User) 리소스 관련 API (예정)
+> - 회원(User) 리소스 관련 API 
 > 
 >   |  HTTP |  Path |  Method |  Request |  목적 |
 >   | --- | --- | --- | --- | --- |
