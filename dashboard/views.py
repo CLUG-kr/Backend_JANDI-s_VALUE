@@ -368,7 +368,7 @@ class CommitView(APIView) :
             date_list.append(date_time_obj)
 
         for dt in date_list :
-            if midnight_utcToday >= dt and dt >= midnight_koreaToday :
+            if dt >= midnight_utcToday :
                 today_count=today_count+1
             elif midnight_utcToday >= dt and dt >= utcYesterday:
                 yesterday_count=yesterday_count+1
